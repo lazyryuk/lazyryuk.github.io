@@ -1,0 +1,82 @@
+<!-- Todo app:
+	user enter some text into the form input then submit the form and add that item above list in addition save those item in local storage as kind of a mock database so that when the user refreshes the page those items are still present.
+    
+state management
+databinding
+events
+lifecycle -->
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+</head>
+<style>
+    body {
+        text-align: center;
+    }
+
+    #list {
+        text-align: left;
+    }
+</style>
+
+<body>
+    <div class="container">
+        <ul id="list"></ul>
+        <input type="text" id="add" />
+        <input id="btn" value="Add Todo" type="submit" />
+        <input type="submit" value="clear" id="hide">
+    </div>
+</body>
+<script>
+    $(document).ready(function () {
+        let arr;
+        if (sessionStorage.getItem("list") != null) {
+            arr = JSON.parse(sessionStorage.getItem("list"));
+            for (let i of arr) {
+                // console.log(i);
+                $("<li>" + i + "</li>").appendTo("#list");
+            }
+        } else {
+            arr = [];
+            $('#hide').hide();
+        }
+
+        $('#btn').click(function () {
+            addlist();
+        });
+
+        $('#add').keypress(function (e) {
+            if (e.which == 13) {
+                addlist();
+            }
+        });
+
+        $('#hide').click(function(e){
+            sessionStorage.removeItem("list");
+            $('li').remove();
+            $(this).hide();
+        })
+
+        function addlist() {
+            text = $('#add').val();
+            if (text !== "" && text !== " ") {
+            $('#hide').show();
+                // console.log(text);
+                arr.push(text);
+                // console.log(arr);
+                sessionStorage.setItem("list", JSON.stringify(arr));
+                $("<li>" + text + "</li>").appendTo("#list");
+                $('#add').val('');
+            }
+        }
+
+    });
+</script>
+
+</html>
